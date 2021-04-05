@@ -18,7 +18,7 @@ class Map {
 	 * @param opposite {Point} coordinates of opposite corner from origin
 	 * @param mapSource data URL of image of the map
 	 * @param northAngle stores angle between map orientation and true north
-	 * @param maxCircleSizeFraction Stores the fraction of horizontle map
+	 * @param maxCircleSizeFraction Stores the fraction of horizontal map
 	 */
 	constructor(id, name, displayable, note, filename, modifiedDate, origin, opposite, mapSource, northAngle, maxCircleSizeFraction) {
 		this.id = id;
