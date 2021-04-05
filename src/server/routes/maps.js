@@ -24,7 +24,9 @@ function formatMapForResponse(map) {
 		modifiedDate: map.modifiedDate,
 		origin: map.origin,
 		opposite: map.opposite,
-		mapSource: map.mapSource
+		mapSource: map.mapSource,
+		northAngle: map.northAngle,
+		maxCircleSizeFraction: map.maxCircleSizeFraction
 	};
 	return formattedMap;
 }
@@ -102,6 +104,12 @@ router.post('/create', async (req, res) => {
 			displayable: {
 				type: 'bool'
 			},
+			northAngle: {
+				type: 'integer'
+			},
+			maxCircleSizeFraction: {
+				type: 'integer'
+			},
 			if: {
 				properties: {
 					origin: {
@@ -152,7 +160,9 @@ router.post('/create', async (req, res) => {
 					req.body.modifiedDate,
 					origin,
 					opposite,
-					req.body.mapSource
+					req.body.mapSource,
+					req.body.northAngle,
+					req.bosy.maxCircleSizeFraction
 				);
 				await newMap.insert(t);
 			});
@@ -171,7 +181,7 @@ router.post('/create', async (req, res) => {
 router.post('/edit', async (req, res) => {
 	const validMap = {
 		type: 'object',
-		required: ['id', 'name', 'modifiedDate', 'filename', 'mapSource', 'displayable', 'note', 'origin', 'opposite'],
+		required: ['id', 'name', 'modifiedDate', 'filename', 'mapSource', 'displayable', 'note', 'origin', 'opposite', 'northAngle', 'maxCircleSizeFraction'],
 		properties: {
 			id: {
 				type: 'integer',
@@ -200,6 +210,12 @@ router.post('/edit', async (req, res) => {
 			},
 			displayable: {
 				type: 'bool'
+			},
+			northAngle: {
+				type: 'integer'
+			},
+			maxCircleSizeFraction: {
+				type: 'integer'
 			},
 			if: {
 				properties: {
@@ -251,7 +267,9 @@ router.post('/edit', async (req, res) => {
 					req.body.modifiedDate,
 					origin,
 					opposite,
-					req.body.mapSource
+					req.body.mapSource,
+					req.body.northAngle,
+					req.body.maxCircleSizeFraction
 				);
 				await editedMap.update(t);
 			});
