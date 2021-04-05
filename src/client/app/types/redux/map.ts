@@ -122,6 +122,8 @@ export type MapsAction =
  * @param origin
  * @param opposite
  * @param mapSource
+ * @param northAngle
+ * @param maxCircleSizeFraction
  */
 export interface MapData{
 	id: number;
@@ -133,6 +135,8 @@ export interface MapData{
 	origin?: GPSPoint;
 	opposite?: GPSPoint;
 	mapSource: string;
+	northAngle: number;
+	maxCircleSizeFraction: number;
 }
 
 /**
@@ -155,6 +159,8 @@ export interface MapMetadata {
 	currentPoint?: CalibratedPoint;
 	calibrationSet?: CalibratedPoint[];
 	calibrationResult?: CalibrationResult;
+	northAngle: number;
+	maxCircleSizeFraction: number;
 }
 
 /**
