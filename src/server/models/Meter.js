@@ -18,8 +18,22 @@ class Meter {
 	 * @param gps location in format of GIS coordinates
 	 * @param meterTimezone Default timezone for meter
 	 * @param identifier Another way to identify a meter
+	 * @param note Note about the meter
+	 * @param area Area of the meter 
+	 * @param cumulative Checks if the reading is a sum of usage or the particular reading
+	 * @param cumulativeReset Tells if the system reset is needed or not
+	 * @param cumulativeResetStart The earliest time of day that a reset can occur
+	 * @param cumulativeResetEnd The latest time of day that a reset can occur
+	 * @param previousDay Checks if the if the reading is of the previous day
+	 * @param readingLength Specifies the time range on every reading in the CSV file
+	 * @param readingVariation +/- time allowed on length to consider within allowed length
+	 * @param reading The value of reading
+	 * @param startTimestamp Start timestamp of reading
+	 * @param endTimestamp  End timestamp of reading 
 	 */
-	constructor(id, name, ipAddress, enabled, displayable, type, meterTimezone, gps = undefined, identifier = name) {
+	constructor(id, name, ipAddress, enabled, displayable, type, meterTimezone, gps = undefined, identifier = name, note, area,
+		cumulative, cumulativeReset, cumulativeResetStart, cumulativeResetEnd, previousDay, readingLength, readingVariation, reading, 
+		startTimestamp, endTimestamp) {
 		this.id = id;
 		this.name = name;
 		this.ipAddress = ipAddress;
@@ -29,6 +43,18 @@ class Meter {
 		this.gps = gps;
 		this.meterTimezone = meterTimezone;
 		this.identifier = identifier;
+		this.note = note;
+		this.area = area;
+		this.cumulative = cumulative;
+		this.cumulativeReset = cumulativeReset;
+		this.cumulativeResetStart = cumulativeResetStart;
+		this.cumulativeResetEnd = cumulativeResetEnd;
+		this.previousDay = previousDay;
+		this.readingLength = readingLength;
+		this.readingVariation = readingVariation;
+		this.reading = reading;
+		this.startTimestamp = startTimestamp;
+		this.endTimestamp = endTimestamp;
 	}
 
 	/**
@@ -78,7 +104,9 @@ class Meter {
 	 */
 	static mapRow(row) {
 		return new Meter(row.id, row.name, row.ipaddress, row.enabled, row.displayable, row.meter_type,
-			row.default_timezone_meter, row.gps, row.identifier);
+			row.default_timezone_meter, row.gps, row.identifier, row.note, row.area, row.cumulative, row.cumulative_reset,
+			row.cumulative_reset_start, row.cumulative_reset_end, row.previous_day, row.reading_length, row.reading_variation, 
+			row.reading, row.start_timestamp, row.end_timestamp);
 	}
 
 	/**
