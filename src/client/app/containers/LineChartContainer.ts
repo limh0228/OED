@@ -21,6 +21,7 @@ function mapStateToProps(state: State) {
 		const byMeterID = state.readings.line.byMeterID[meterID];
 		if (byMeterID !== undefined) {
 			const readingsData = byMeterID[timeInterval.toString()];
+			console.log("In LineChartContainer: " + timeInterval.toString());
 			if (readingsData !== undefined && !readingsData.isFetching) {
 				const label = state.meters.byMeterID[meterID].name;
 				const colorID = meterID;
@@ -41,12 +42,50 @@ function mapStateToProps(state: State) {
 				});
 
 				// Save the timestamp range of the plot
-				let minTimestamp: string = '';
+				let minTimestamp: string = ''; 
 				let maxTimestamp: string = '';
 				if (readings.length > 0) {
 					/* tslint:disable:no-string-literal */
-					minTimestamp = readings[0]['startTimestamp'].toString();
-					maxTimestamp = readings[readings.length - 1]['startTimestamp'].toString();
+
+					// When the true (user's chosen) timestamp is not an absolute max/min, 
+					// 		the max and min of the plotly graph should be exactly the values chosen by the user, 
+					// 		not the closest compressed value.
+					// For the unbounded graph (no zoom), the max distance between compressed data
+					//		points is calculated, and a buffer of this interval is added to either end of
+					//		the graph to account for potentially existing, but compressed data
+					//		on either side of the compressed min/max.
+
+					let trueMinTimestamp = timeInterval.getStartTimestamp();
+					let compressedMinTimestamp = readings[0]['startTimestamp'];
+
+					// if there is only one compressed reading, find the average of its start and end time
+					let compressedDataInterval = (readings[0]['startTimestamp'] - readings[0]['endTimestamp'])/2;
+					if (readings.length > 1) {
+						// if there is more than one compressed reading, find the interval between points
+						compressedDataInterval = Math.abs(readings[0]['startTimestamp'] - readings[1]['startTimestamp']);
+					}
+					
+
+					if(trueMinTimestamp != null){
+						// if min time is not unbounded, use the user's exact min time
+						minTimestamp = trueMinTimestamp.toString();
+					} else {
+						// for unbounded min, augment the compressed min timestamp by a buffer interval
+						let bufferedMinTimestamp = compressedMinTimestamp - compressedDataInterval;
+						// make sure buffered min is never less than zero
+						bufferedMinTimestamp = Math.max(bufferedMinTimestamp, 0); 
+						minTimestamp = bufferedMinTimestamp.toString();
+					}
+
+					let trueMaxTimestamp = timeInterval.getStartTimestamp();
+					let compressedMaxTimestamp = readings[readings.length - 1]['startTimestamp'];
+
+					if(trueMaxTimestamp != null){
+						maxTimestamp = trueMaxTimestamp.toString();
+					} else {
+						let bufferedMaxTimestamp = compressedMaxTimestamp + compressedDataInterval;
+						maxTimestamp = bufferedMaxTimestamp.toString();
+					}
 					/* tslint:enable:no-string-literal */
 				}
 				const root: any = document.getElementById('root');

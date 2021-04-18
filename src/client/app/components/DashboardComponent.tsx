@@ -138,8 +138,6 @@ export function getRangeSliderInterval(): string {
 		const fullWidth: number = parseInt(sliderContainer.getAttribute('width'));
 		const sliderMinX: number = parseInt(sliderBox.getAttribute('x'));
 		const sliderMaxX: number = sliderMinX + parseInt(sliderBox.getAttribute('width'));
-
-		// did you know that if you slide totally from side to side, it zoomas all the way out?
 		if (sliderMaxX - sliderMinX === fullWidth) {
 			return 'all';
 		}
@@ -153,29 +151,8 @@ export function getRangeSliderInterval(): string {
 		const secondsPerPixel: number = deltaSeconds / fullWidth;
 
 		// Get the new min and max times, in seconds, from the slider box
-		const sliderMinXAsTimeStamp = minTimeStamp + (secondsPerPixel * sliderMinX);
-		const sliderMaxXAsTimeStamp = minTimeStamp + (secondsPerPixel * sliderMaxX);
-
-		const newMinXTimestamp = Math.floor(sliderMinXAsTimeStamp);
-		const newMaxXTimestamp = Math.floor(sliderMaxXAsTimeStamp);
-
-		console.log("From Dashboard Component");
-		if (sliderMinXAsTimeStamp == minTimeStamp){
-			return new TimeInterval(null, moment(newMaxXTimestamp)).toString();
-		}
-
-		// same can be done for max endpoint.
-		
-		/*
-		console.log("sliderMaxX " + sliderMaxX);
-		console.log("(minTimeStamp + (secondsPerPixel * sliderMaxX))" + (minTimeStamp + (secondsPerPixel * sliderMaxX)));
-		console.log("maxTimeStamp, should be same ad sliderMaxX if zoom to edge " + maxTimeStamp);
-
-		console.log("sliderMinX " + sliderMinX);
-		console.log("(minTimeStamp + (secondsPerPixel * sliderMinX))" + (minTimeStamp + (secondsPerPixel * sliderMinX)));
-		console.log("minTimeStamp, should be same ad sliderMaxX if zoom to edge " + minTimeStamp);
-		*/
-
+		const newMinXTimestamp = Math.floor(minTimeStamp + (secondsPerPixel * sliderMinX));
+		const newMaxXTimestamp = Math.floor(minTimeStamp + (secondsPerPixel * sliderMaxX));
 		return new TimeInterval(moment(newMinXTimestamp), moment(newMaxXTimestamp)).toString();
 	} else {
 		throw new Error('unable to get range slider params');
